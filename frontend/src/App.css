@@ -1,0 +1,48 @@
+.navbar-brand {
+  font-weight: 400;
+  font-style: normal;
+  font-size: 2.5em;
+  margin-left: 20px;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  margin: center;
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  color: black;
+  background-color: white;
+  border: 1px solid black;
+}
+
+.btn:hover {
+  color: white;
+  background-color: black;
+  border: 1px solid black;
+}
+
+.card-title a {
+  color: black;
+}
+
+.card-title a:hover {
+  color: red;
+}
+
+.nav-item {
+  margin: 0 7px;
+}
+
+.nav-item a:hover {
+  color: red;
+}
+
+.card-comment {
+  padding: 20px;
+}
+
