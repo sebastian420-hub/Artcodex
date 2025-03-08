@@ -22,7 +22,6 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<div>Profile Page</div>} />
             <Route path="/register" element={<Register />} />
-            {/* Add more routes as needed */}
           </Routes>
         </div>
       </BrowserRouter>

@@ -14,7 +14,6 @@ const ModelViewer = ({ modelUrl }) => {
       return;
     }
 
-    // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -29,7 +28,6 @@ const ModelViewer = ({ modelUrl }) => {
     camera.updateProjectionMatrix();
     container.appendChild(renderer.domElement);
 
-    // Lighting
     const ambientLight = new THREE.AmbientLight(0xfff2ff, 7);
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 7);
@@ -38,13 +36,12 @@ const ModelViewer = ({ modelUrl }) => {
 
     console.log('Attempting to load model from:', modelUrl);
 
-    // Throttle progress logging
     const throttleProgress = (progress) => {
       const percent = ((progress.loaded / progress.total) * 100).toFixed(2);
       console.log(`Model loading progress: ${percent}%`);
     };
     let lastLogTime = 0;
-    const throttleInterval = 500; // Log every 500ms
+    const throttleInterval = 500; 
 
     const loader = new GLTFLoader();
     loader.load(
@@ -53,7 +50,6 @@ const ModelViewer = ({ modelUrl }) => {
         console.log('Model loaded successfully:', gltf);
         const model = gltf.scene;
 
-        // Process model materials and geometry
         model.traverse((child) => {
           if (child.isMesh) {
             child.geometry.computeVertexNormals();
@@ -66,23 +62,21 @@ const ModelViewer = ({ modelUrl }) => {
 
         scene.add(model);
 
-        // Center and scale the model based on its bounding box
         const box = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
 
-        // Move model to origin
+  
         model.position.sub(center);
 
-        // Scale model to fit within a reasonable view (optional, adjust as needed)
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scaleFactor = 20 / maxDim; // Adjust "5" to control model size
+        const scaleFactor = 20 / maxDim; 
         model.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-        // Dynamically position camera based on model size
-        const cameraDistance = maxDim * scaleFactor; // Distance is proportional to model size
-        camera.position.set(cameraDistance, cameraDistance * 0.5, cameraDistance); // Diagonal view
-        camera.lookAt(0, 0, 0); // Look at the model's center
+
+        const cameraDistance = maxDim * scaleFactor; 
+        camera.position.set(cameraDistance, cameraDistance * 0.5, cameraDistance); 
+        camera.lookAt(0, 0, 0);
       },
       (progress) => {
         const now = performance.now();
@@ -94,7 +88,7 @@ const ModelViewer = ({ modelUrl }) => {
       (error) => console.error('Model loading error for', modelUrl, ':', error)
     );
 
-    // OrbitControls setup with passive event listeners
+
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
@@ -105,11 +99,11 @@ const ModelViewer = ({ modelUrl }) => {
     controls.enableZoom = true;
     controls.addEventListener('wheel', () => {}, { passive: true }); // Explicitly passive
 
-    // Animation loop
+
     let lastFrameTime = 0;
     const animate = (time) => {
       const delta = time - lastFrameTime;
-      if (delta > 16) { // Cap at ~60 FPS
+      if (delta > 16) { 
         lastFrameTime = time;
         controls.update();
         renderer.render(scene, camera);
@@ -118,7 +112,7 @@ const ModelViewer = ({ modelUrl }) => {
     };
     requestAnimationFrame(animate);
 
-    // Handle window resize
+
     const handleResize = () => {
       const newWidth = container.clientWidth;
       const newHeight = container.clientHeight;
@@ -128,7 +122,6 @@ const ModelViewer = ({ modelUrl }) => {
     };
     window.addEventListener('resize', handleResize);
 
-    // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
       if (container && renderer.domElement) {
