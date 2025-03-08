@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useCallback } from 'react';
 
-export function useArtworksManager() {
+export function useArtworksManager(category) {
     const [artworks, setArtworks] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const { token } = useAuth();
@@ -27,6 +28,7 @@ export function useArtworksManager() {
     useEffect(() => {
         fetchArtworks(category); // Initial fetch
     }, []);
+
     
     return { artworks, fetchArtworks, isLoading };
 }

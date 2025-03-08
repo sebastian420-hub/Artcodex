@@ -42,9 +42,9 @@ export default function PostList() {
     <div>
       <button className='btn btn-primary mb-3' onClick={ToggleOpen}>Upload</button>
       {isUploadOpen && <UploadForm />}
-      <div id="posts">
+      <div id="posts" className='posts-container'>
         {posts.map(post => (
-          <div key={post.id} className="post-item" data-visible="false">
+        <div key={post.id} className="post-item row" data-visible="false">
           <Post 
           post={post} 
           shouldRenderModel={post.dataset?.visible === 'true'}

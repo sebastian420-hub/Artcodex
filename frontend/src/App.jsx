@@ -6,6 +6,7 @@ import PostList from './components/PostLists.jsx';
 import Login from './components/Login.jsx'; 
 import Register from './components/Register.jsx';
 import './App.css';
+import ArtworksCreation from './components/ArtworksCreation.jsx';
 
 export default function App() {
   return (
@@ -16,7 +17,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<PostList />} />
             <Route path="/feed" element={<PostList />} />
-            <Route path="/artworks" element={<div>Artworks Page</div>} />
+            <Route path="/artworks" element={<ArtworksCreation />} />
             <Route path="/3d-editor" element={<div>3D Graphic Editor Page</div>} />
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<div>Profile Page</div>} />

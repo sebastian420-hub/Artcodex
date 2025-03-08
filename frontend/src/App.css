@@ -46,3 +46,17 @@
   padding: 20px;
 }
 
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.post-item {
+  width: 100%;
+  min-width: 300px;
+  flex: 0 0  auto;
+}
+
