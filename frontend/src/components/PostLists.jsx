@@ -1,14 +1,14 @@
-import React, { use } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Post from './Post';
 import { usePostManager } from '../hooks/usePostManager';
 import UploadForm from './UploadForm';
-import { useEffect, useRef } from 'react';
 
 export default function PostList() {
   const { posts, isLoading } = usePostManager();
-  const [isUploadOpen, setIsUploadOpen] = React.useState(false);
-
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [activePostId, setActivePostId] = useState(null);
   const observerRef = useRef(null);
+  const lastScrollPosition = useRef(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -32,28 +32,50 @@ export default function PostList() {
     };
   }, [posts]);
 
-  const ToggleOpen = () => {
+  const handlePostClick = (postId) => {
+    lastScrollPosition.current = window.scrollY;
+    setActivePostId(postId); 
+  };
+
+  const handleClose = () => {
+    setActivePostId(null);
+    setTimeout(() => {
+      window.scrollTo(0, lastScrollPosition.current);
+    }, 0);
+  };
+
+  const toggleUploadOpen = () => {
     setIsUploadOpen(!isUploadOpen);
-  }
-  
+  };
+
   if (isLoading && posts.length === 0) return <div>Loading...</div>;
 
   return (
     <div>
-      <button className='btn btn-primary mb-3' onClick={ToggleOpen}>Upload</button>
-      {isUploadOpen && <UploadForm />}
-      <div id="posts" className='posts-container'>
+      <div id="posts" className="posts-container">
         {posts.map(post => (
-        <div key={post.id} className="post-item row" data-visible="false">
-          <Post 
-          post={post} 
-          shouldRenderModel={post.dataset?.visible === 'true'}
-          onLikeUpdate={(id, count) => console.log(`Post ${id} likes: ${count}`)} />
-        </div>
+          <div
+            key={post.id}
+            className={`post-item ${activePostId === post.id ? 'expanded' : ''}`} 
+            data-visible="false"
+            data-post-id={post.id}
+            onClick={() => handlePostClick(post.id)}
+          >
+            <Post
+              post={post}
+              isExpanded={activePostId === post.id}
+              shouldRenderModel={false}
+              onLikeUpdate={(id, count) => console.log(`Post ${id} likes: ${count}`)}
+              onClose={handleClose}
+            />
+          </div>
         ))}
       </div>
       {isLoading && <div>Loading more posts...</div>}
+      {/* {isUploadOpen && <UploadForm />}
+      <button onClick={toggleUploadOpen}>
+        {isUploadOpen ? 'Close Upload' : 'Open Upload'}
+      </button> */}
     </div>
   );
 }
-

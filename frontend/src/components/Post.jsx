@@ -1,14 +1,14 @@
-import React, { useState, memo, useMemo, use } from 'react';
+import React, { useState, memo, useMemo } from 'react';
 import axios from 'axios';
 import CommentSection from './CommentSection';
 import { useAuth } from '../context/AuthContext';
 import ModelViewer from './ModelViewer';
+import FollowButton from './FollowButton';
 
-export default function Post ({ post, onLikeUpdate }) {
+export default function Post({ post, isExpanded, onLikeUpdate, onClose }) {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [likes, setLikes] = useState(post.likes_count || 0);
   const [loadModel, setLoadModel] = useState(false);
-  const [image, setImage] = useState(false);
   const { token } = useAuth();
   const apiUrl = 'http://localhost:8000/api/';
 
@@ -25,6 +25,7 @@ export default function Post ({ post, onLikeUpdate }) {
       console.error('Error liking post:', error);
     }
   };
+
   const toggleComments = () => {
     setIsCommentOpen(!isCommentOpen);
   };
@@ -32,14 +33,27 @@ export default function Post ({ post, onLikeUpdate }) {
   const handleLoadModel = () => {
     setLoadModel(!loadModel);
   };
-return (
-    <div className="col-md-8 mx-auto">
-      <div className="card shadow-sm mb-3" style={{ borderRadius: '4px' }}>
+
+  return (
+    <div className="post-card" style={{ width: '100%' }}>
+      {isExpanded && (
+        <button
+          className="btn btn-primary btn-sm mb-3 me-2"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
+        >
+          Close
+        </button>
+      )}
+      <div className="card shadow-sm" style={{ borderRadius: '4px' }}>
         <div className="card-body">
           <h5 className="card-title">
             <a href={`/profile/${post.user.username}`} style={{ textDecoration: 'none' }}>
               @{post.user.username}
             </a>
+            <FollowButton userName={post.user.username} />
           </h5>
           <p className="card-text">{post.post}</p>
           {post.image && (

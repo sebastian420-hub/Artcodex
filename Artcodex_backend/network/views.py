@@ -100,8 +100,8 @@ def follow(request, username):
     following, created = Following.objects.get_or_create(follower=user, followed=followed)
     if not created:
         following.delete()
-        return Response({"success": True, "message": "Unfollowed"})
-    return Response({"success": True, "message": "Followed"})
+        return Response({"success": True, "isFollowing": False, "message": f"{user.username} unfollowed {followed.username}"})
+    return Response({"success": True, "isFollowing": True, "message": f"{user.username} followed {followed.username}"}) 
 
 @api_view(['GET'])
 def profile_posts(request, username):

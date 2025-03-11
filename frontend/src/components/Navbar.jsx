@@ -12,6 +12,10 @@ export default function Navbar() {
     navigate('/');
   };
 
+  const openNav = () => {
+    document.getElementById("navbarNav").classList.toggle("show");
+  }
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid mx-auto">
@@ -24,6 +28,7 @@ export default function Navbar() {
           aria-controls="navbarNav"
           aria-expanded="false"
           aria-label="Toggle navigation"
+          onClick={openNav}
         >
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -40,10 +45,8 @@ export default function Navbar() {
             </li>
             {isAuthenticated ? (
               <>
-                <li className="nav-item">
-                  <button className="nav-link btn btn-link" onClick={handleLogout}>
-                    Logout
-                  </button>
+                <li className="nav-item" id="logout">
+                  <NavLink className="nav-link" id="logout-link" onClick={handleLogout}>Logout</NavLink>
                 </li>
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/profile">{user}</NavLink>
