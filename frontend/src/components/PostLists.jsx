@@ -1,14 +1,36 @@
+// components/PostList.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import Post from './Post';
-import { usePostManager } from '../hooks/usePostManager';
-import UploadForm from './UploadForm';
+import { usePosts } from '../context/PostContext';
 
 export default function PostList() {
-  const { posts, isLoading } = usePostManager();
+  const { posts, isLoading, fetchPosts, resetPosts } = usePosts();
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [activePostId, setActivePostId] = useState(null);
   const observerRef = useRef(null);
   const lastScrollPosition = useRef(0);
+
+  useEffect(() => {
+    let timeoutId;
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
+        !isLoading &&
+        !posts.isComplete
+      ) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          fetchPosts(posts.page + 1);
+        }, 300);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, [isLoading, posts.isComplete, fetchPosts, posts.page]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -34,7 +56,7 @@ export default function PostList() {
 
   const handlePostClick = (postId) => {
     lastScrollPosition.current = window.scrollY;
-    setActivePostId(postId); 
+    setActivePostId(postId);
   };
 
   const handleClose = () => {
@@ -44,19 +66,15 @@ export default function PostList() {
     }, 0);
   };
 
-  const toggleUploadOpen = () => {
-    setIsUploadOpen(!isUploadOpen);
-  };
-
   if (isLoading && posts.length === 0) return <div>Loading...</div>;
 
   return (
     <div>
       <div id="posts" className="posts-container">
-        {posts.map(post => (
+        {posts.map((post) => (
           <div
             key={post.id}
-            className={`post-item ${activePostId === post.id ? 'expanded' : ''}`} 
+            className={`post-item ${activePostId === post.id ? 'expanded' : ''}`}
             data-visible="false"
             data-post-id={post.id}
             onClick={() => handlePostClick(post.id)}
@@ -72,10 +90,7 @@ export default function PostList() {
         ))}
       </div>
       {isLoading && <div>Loading more posts...</div>}
-      {/* {isUploadOpen && <UploadForm />}
-      <button onClick={toggleUploadOpen}>
-        {isUploadOpen ? 'Close Upload' : 'Open Upload'}
-      </button> */}
+      <button onClick={resetPosts}>Refresh Feed</button>
     </div>
   );
 }

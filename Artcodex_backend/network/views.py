@@ -31,6 +31,7 @@ class RegisterView(generics.CreateAPIView):
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-timestamp')
+    print(queryset)
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -39,11 +40,14 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         category = request.query_params.get('category', None)
+        user = request.query_params.get('user', None)
         has_3d_model = request.query_params.get('has_3d_model', None)
         page = request.query_params.get('page', 1)
         queryset = self.queryset
         if category:
             queryset = queryset.filter(category=category)
+        if user:
+            queryset = queryset.filter(user=user)
         if has_3d_model == 'true':  
             queryset = queryset.filter(model_3d__isnull=False)
         elif has_3d_model == 'false':  

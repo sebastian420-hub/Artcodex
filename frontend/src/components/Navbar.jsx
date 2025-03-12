@@ -2,9 +2,11 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { usePosts } from '../context/PostContext';
 
 export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
+  const { userName, setUserName, setNavProfileState  } = usePosts();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -13,8 +15,17 @@ export default function Navbar() {
   };
 
   const openNav = () => {
+    console.log('openNav');
     document.getElementById("navbarNav").classList.toggle("show");
   }
+
+  const navProfile = () => {
+    console.log('navProfile', user);
+    setNavProfileState(true);
+    setUserName(user);
+    
+  }
+
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -49,7 +60,7 @@ export default function Navbar() {
                   <NavLink className="nav-link" id="logout-link" onClick={handleLogout}>Logout</NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/profile">{user}</NavLink>
+                  <NavLink className="nav-link" to="/profile" onClick={navProfile}>{user}</NavLink>
                 </li>
               </>
             ) : (
