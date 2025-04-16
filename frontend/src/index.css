@@ -1,0 +1,20 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  align-content: center;
+  font-family: "Syne Mono", monospace;
+  background-color: #f8f9fa; 
+
+
+
+  font-weight: 400;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+
+
