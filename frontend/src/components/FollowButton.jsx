@@ -33,23 +33,12 @@ export default function FollowButton({ userName }) {
             };
             localStorage.setItem(`is${user}Following${userName}`, JSON.stringify(data));
             console.log('isFollowing:', response.data.isFollowing);
-            if (response.data.isFollowing === true){
-                setIsFollowing(true);
-                console.log('Followed user:', isFollowing);
-
-            }else {
-                setIsFollowing(false);
-                console.log('Followed user:', isFollowing);
-            }
-            
+            setIsFollowing(response.data.isFollowing)
             
         } catch (error) {
             console.error('Error following user:', error);
         }
     };
-
-    console.log('isFollowing_out:', isFollowing);
-    
 
     return (
         <button
