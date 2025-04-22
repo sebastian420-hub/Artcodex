@@ -5,7 +5,7 @@ import { usePosts } from '../context/PostContext';
 import UploadForm from './UploadForm';
 
 export default function PostList() {
-  const { posts, isLoading, fetchPosts, resetPosts } = usePosts();
+  const { posts,page, isLoading, fetchPosts, resetPosts } = usePosts();
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [activePostId, setActivePostId] = useState(null);
   const observerRef = useRef(null);
@@ -21,7 +21,7 @@ export default function PostList() {
       ) {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
-          fetchPosts(posts.page + 1);
+          fetchPosts(page + 1);
         }, 300);
       }
     };

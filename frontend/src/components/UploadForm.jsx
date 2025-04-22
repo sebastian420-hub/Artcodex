@@ -1,8 +1,8 @@
 import React from "react";
-import { usePostManager } from '../hooks/usePostManager';
+import { usePosts } from '../context/PostContext';
 
 export default function UploadForm() {
-  const { uploadPost } = usePostManager();
+  const { uploadPost } = usePosts();
 
   const handleUpload = (e) => {
     e.preventDefault();

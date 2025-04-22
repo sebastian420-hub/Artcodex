@@ -328,6 +328,7 @@ const Scene = () => {
       setNextCameraId(1);
     }
   };
+  
 
   const handleAddLight = (type) => {
     const newId = nextLightId;

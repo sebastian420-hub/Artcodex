@@ -10,53 +10,55 @@ export function usePostManager() {
   const { token } = useAuth();
   const apiUrl = 'http://localhost:8000/api/';
 
-  const fetchPosts = useCallback(async (pageNum = 1) => {
-    if (isComplete || isLoading) return;
-    setIsLoading(true);
+  // const fetchPosts = useCallback(async (pageNum = 1) => {
+  //   console.log(isComplete);
+  //   console.log(isLoading);
+  //   if (isComplete || isLoading) return;
+  //   setIsLoading(true);
 
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    try {
-      const response = await axios.get(`${apiUrl}posts/?page=${pageNum}`, { headers });
-      const newPosts = response.data.posts;
-      console.log('Fetched posts:', newPosts);
-      setPosts(prevPosts => (pageNum === 1 ? newPosts : [...prevPosts, ...newPosts]));
-      setIsComplete(!response.data.has_next);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [token, isComplete, isLoading, apiUrl]);
+  //   const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  //   try {
+  //     const response = await axios.get(`${apiUrl}posts/?page=${pageNum}`, { headers });
+  //     const newPosts = response.data.posts;
+  //     console.log('Fetched posts:', newPosts);
+  //     setPosts(prevPosts => (pageNum === 1 ? newPosts : [...prevPosts, ...newPosts]));
+  //     setIsComplete(!response.data.has_next);
+  //   } catch (error) {
+  //     console.error('Error fetching posts:', error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }, [token, isComplete, isLoading, apiUrl]);
 
-  useEffect(() => {
-    fetchPosts(1); // Initial fetch
-  }, [fetchPosts]);
+  // useEffect(() => {
+  //   fetchPosts(1); // Initial fetch
+  // }, [fetchPosts]);
 
-  useEffect(() => {
-    let timeoutId;
-    const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
-        !isLoading &&
-        !isComplete
-      ) {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          setPage(prev => {
-            const nextPage = prev + 1;
-            fetchPosts(nextPage);
-            return nextPage;
-          });
-        }, 300); 
-      }
-    };
+  // useEffect(() => {
+  //   let timeoutId;
+  //   const handleScroll = () => {
+  //     if (
+  //       window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
+  //       !isLoading &&
+  //       !isComplete
+  //     ) {
+  //       clearTimeout(timeoutId);
+  //       timeoutId = setTimeout(() => {
+  //         setPage(prev => {
+  //           const nextPage = prev + 1;
+  //           fetchPosts(nextPage);
+  //           return nextPage;
+  //         });
+  //       }, 300); 
+  //     }
+  //   };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(timeoutId);
-    };
-  }, [isLoading, isComplete, fetchPosts]);
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //     clearTimeout(timeoutId);
+  //   };
+  // }, [isLoading, isComplete]);
 
   const uploadPost = async (text, category, link, image, model_3d, model_3d_bin, model_3d_png) => {
     if (!token) {
@@ -90,10 +92,10 @@ export function usePostManager() {
             },
         });
         console.log('Uploaded post:', response.data);
-        setPosts(prev => [response.data, ...prev]);
-        setPage(1);
-        setIsComplete(false);
-        fetchPosts(1);
+        // setPosts(prev => [response.data, ...prev]);
+        // setPage(1);
+        // setIsComplete(false);
+        // fetchPosts(1);
     } catch (error) {
         console.error('Error uploading post:', error.response?.data || error);
     }
@@ -103,7 +105,6 @@ export function usePostManager() {
     setPosts([]);
     setPage(1);
     setIsComplete(false);
-    fetchPosts(1);
   };
 
   return { posts, isLoading, uploadPost, resetPosts };
