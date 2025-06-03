@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 const useKeyboardShortcuts = (setTransformMode) => {
   useEffect(() => {
     const handleKeyDown = (event) => {
-      // Only trigger if we're not typing in an input field
       if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
         return;
       }
